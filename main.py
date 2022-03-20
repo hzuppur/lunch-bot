@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-from datetime import date
+import datetime
+from babel.dates import format_datetime
 import pyperclip as pc
 
 EMOJI_NUMBERS = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
@@ -22,8 +23,8 @@ def get_offers():
 
 
 def get_offers_string(selected_locations):
-    today = date.today()
-    offers_string = f"## Päevapakkumised {today.strftime('%d %B')} \n"
+    today = format_datetime(datetime.datetime.today(), "d.MMMM", locale="et")
+    offers_string = f"## Päevapakkumised {today} \n"
     location_offers = get_offers()
 
     for i in range(len(selected_locations)):

@@ -7,7 +7,7 @@ to the text to indicate their preferred place to go for lunch.
 Example output of the script is down below.
 
 ----
-## Päevapakkumised 21 March 
+## Päevapakkumised 21.märts 
 ### 1️⃣ Delta kohvik:
 * Pardi-confit kartulite/riisi/tatra, kastme ja salatiga. 5,80€
 Duck confit with potates/rice/buckwheat, sauce and salad. 5,80€
@@ -28,8 +28,7 @@ Vegetable puree soup. 3,00/2,00€
 ----
 
 ## Dependency's
-requests - for getting the päevapakkumised.ee page
-
-bs4 - for parsing the HTML
-
-pyperclip - for copying the text to clipboard
+* requests - for getting the päevapakkumised.ee page 
+* bs4 - for parsing the HTML 
+* pyperclip - for copying the text to clipboard
+* babel.dates - for getting date as estonian
