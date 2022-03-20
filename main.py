@@ -31,6 +31,7 @@ def get_offers_string(selected_locations):
         selected_location = selected_locations[i]
         offers_string += f"### {EMOJI_NUMBERS[i]} {selected_location}:\n"
         for offer in location_offers[selected_location]:
+            offer = offer.split('\n')[0]
             offers_string += f"* {offer}\n"
 
     return offers_string
