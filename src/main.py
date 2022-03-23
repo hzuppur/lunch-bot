@@ -2,10 +2,25 @@ import requests
 from bs4 import BeautifulSoup
 import datetime
 from babel.dates import format_datetime
+import configparser
 #import pyperclip as pc
 
-EMOJI_NUMBERS = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
-OFFERS_URL = "https://xn--pevapakkumised-5hb.ee/tartu"
+config = configparser.ConfigParser()
+config.read("../config/application.ini", encoding="utf8")
+config.read("../config/user.ini", encoding="utf8")
+
+if "APPLICATION" not in config:
+    raise ValueError("Invalid application configuration")
+if "USER" not in config:
+    raise ValueError("Invalid user configuration")
+
+OFFERS_URL = config["APPLICATION"]["offers_base_url"] + config["USER"]["location_url"]
+
+DEFAULT_EMOJI = config["APPLICATION"]["default_emoji"].split(",")
+EMOJI = config["USER"]["emoji"].split(",")
+if len(EMOJI) < len(DEFAULT_EMOJI):
+    EMOJI = EMOJI + DEFAULT_EMOJI[len(EMOJI):]
+
 
 def get_offers():
     html_doc = requests.get(OFFERS_URL).content
@@ -23,13 +38,16 @@ def get_offers():
 
 
 def get_offers_string(selected_locations):
+    if len(selected_locations) > len(DEFAULT_EMOJI):
+        raise ValueError(f"Maximum number of locations is f{len(DEFAULT_EMOJI)}, {len(selected_locations)} requested")
+
     today = format_datetime(datetime.datetime.today(), "d.MMMM", locale="et")
     offers_string = f"## Päevapakkumised {today} \n"
     location_offers = get_offers()
 
     for i in range(len(selected_locations)):
         selected_location = selected_locations[i]
-        offers_string += f"### {EMOJI_NUMBERS[i]} {selected_location}:\n"
+        offers_string += f"### {EMOJI[i]} {selected_location}:\n"
         for offer in location_offers[selected_location]:
             offer = offer.split('\n')[0]
             offers_string += f"* {offer}\n"
@@ -38,6 +56,6 @@ def get_offers_string(selected_locations):
 
 
 if __name__ == '__main__':
-    meal_offers = get_offers_string(["Delta kohvik", "Cafe Naiiv", "The Grill"])
+    meal_offers = get_offers_string(config["USER"]["locations"].split(","))
     #pc.copy(meal_offers)
     print(meal_offers)
