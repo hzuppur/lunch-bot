@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import datetime
 from babel.dates import format_datetime
-import pyperclip as pc
+#import pyperclip as pc
 
 EMOJI_NUMBERS = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 OFFERS_URL = "https://xn--pevapakkumised-5hb.ee/tartu"
@@ -39,5 +39,5 @@ def get_offers_string(selected_locations):
 
 if __name__ == '__main__':
     meal_offers = get_offers_string(["Delta kohvik", "Cafe Naiiv", "The Grill"])
-    pc.copy(meal_offers)
+    #pc.copy(meal_offers)
     print(meal_offers)
