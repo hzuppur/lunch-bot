@@ -25,6 +25,6 @@ Example output of the script is down below.
 ## Dependencies
 * requests - for getting the päevapakkumised.ee page 
 * bs4 - for parsing the HTML
-* babel.dates - for getting date as estonian
+* babel.dates - for converting the dates to estonian
 
 Install using pipenv
