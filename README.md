@@ -22,8 +22,9 @@ Example output of the script is down below.
 
 ----
 
-## Dependency's
+## Dependencies
 * requests - for getting the päevapakkumised.ee page 
-* bs4 - for parsing the HTML 
-* pyperclip - for copying the text to clipboard
+* bs4 - for parsing the HTML
 * babel.dates - for getting date as estonian
+
+Install using pipenv
