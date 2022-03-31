@@ -96,6 +96,10 @@ class DiscordClient(discord.Client):
 
     @tasks.loop(time=get_time_utc())
     async def lunchtime(self):
+        if datetime.datetime.now().weekday() > 4:
+            print("Weekend, skipping")
+            return
+
         print("Sending offers to channel")
         channel = self.get_channel(DISCORD_BOT_CHANNEL)
         offers, emoji = get_offers_string("discord")
