@@ -1,10 +1,15 @@
-import requests
-from bs4 import BeautifulSoup
-import datetime
-from babel.dates import format_datetime
 import configparser
-#import pyperclip as pc
+import datetime
+import os
 
+import requests
+from babel.dates import format_datetime
+from bs4 import BeautifulSoup
+
+# Change working directory to current file to make sure config file paths are correct
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+# Read configuration files
 config = configparser.ConfigParser()
 config.read("../config/application.ini", encoding="utf8")
 config.read("../config/user.ini", encoding="utf8")
@@ -57,5 +62,4 @@ def get_offers_string(selected_locations):
 
 if __name__ == '__main__':
     meal_offers = get_offers_string(config["USER"]["locations"].split(","))
-    #pc.copy(meal_offers)
     print(meal_offers)
