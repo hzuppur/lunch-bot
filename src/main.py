@@ -70,7 +70,7 @@ def get_offers_string(formatting: Union[Literal["md"], Literal["discord"]] = "md
 
     for i in range(len(selected_locations)):
         selected_location = selected_locations[i].strip()
-        if len(location_offers[selected_location]):
+        if selected_location in location_offers and len(location_offers[selected_location]):
             offers_string += f"### {EMOJI[i]} {selected_location}:\n" if formatting == "md" else f"\n{EMOJI[i]} ***{selected_location}***\n"
             for offer in location_offers[selected_location]:
                 offer = offer.split('\n')[0]
