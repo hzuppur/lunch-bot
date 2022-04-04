@@ -38,8 +38,8 @@ if "discord_bot_token" in config["USER"] and "discord_channel_id" in config["USE
     DISCORD_BOT_CHANNEL = int(config["USER"]["discord_channel_id"])
 
 
-def get_time_utc() -> datetime.time:
-    return (datetime.datetime.combine(datetime.date.today(), datetime.time(11, 40)) - TIMEZONE.utcoffset(datetime.datetime.now())).time()
+def get_time_utc(hour: int, minute: int) -> datetime.time:
+    return (datetime.datetime.combine(datetime.date.today(), datetime.time(hour, minute)) - TIMEZONE.utcoffset(datetime.datetime.now())).time()
 
 
 def get_offers():
@@ -94,7 +94,7 @@ class DiscordClient(discord.Client):
     async def on_ready(self):
         print(f"Logged in to discord as {self.user} (ID: {self.user.id})")
 
-    @tasks.loop(time=get_time_utc())
+    @tasks.loop(time=get_time_utc(11, 40))
     async def lunchtime(self):
         if datetime.datetime.now().weekday() > 4:
             print("Weekend, skipping")
