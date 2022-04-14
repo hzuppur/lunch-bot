@@ -103,9 +103,25 @@ class DiscordClient(discord.Client):
         print("Sending offers to channel")
         channel = self.get_channel(DISCORD_BOT_CHANNEL)
         offers, emoji = get_offers_string("discord")
-        message = await channel.send(offers)
+
+        lines = offers.split("\n")
+        messages = [""]
+        current_len = 0
+
+        for line in lines:
+            line = line + "\n"
+            if current_len + len(line) >= 2000:
+                messages.append(line)
+                current_len = len(line)
+            else:
+                messages[-1] += line
+                current_len += len(line)
+
+        for message in messages:
+            last_message = await channel.send(message)
+
         for reaction in emoji:
-            await message.add_reaction(reaction)
+            await last_message.add_reaction(reaction)
 
     @lunchtime.before_loop
     async def before_lunchtime(self):
