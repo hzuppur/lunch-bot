@@ -7,9 +7,6 @@ RUN apt-get update && apt-get install -y locales
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 
-# Copy configuration files
-COPY ./config ./config
-
 # Set working directory
 WORKDIR /app
 
@@ -21,6 +18,9 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy application code
 COPY ./src .
+
+# Copy configuration files
+COPY ./config /config
 
 # Run the application
 CMD ["python3", "main.py"]
