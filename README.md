@@ -1,5 +1,5 @@
 # Lunch-bot
-Script and an optional Discord bot for choosing lunch options from [päevapakkumised.ee](https://xn--pevapakkumised-5hb.ee/). 
+Script and an optional Discord bot for choosing lunch options from [päevapakkumised.ee](https://xn--pevapakkumised-5hb.ee/) and [Päevapraad.ee](https://www.paevapraad.ee/). 
 
 All offers from selected restaurants will be scraped and each restaurant will be assigned an emoji. This can be used to select the preferred location, using message reactions in Slack or Discord.  
 

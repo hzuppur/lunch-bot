@@ -23,7 +23,8 @@ if "APPLICATION" not in config:
 if "USER" not in config:
     raise ValueError("Invalid/missing user configuration")
 
-OFFERS_URL = config["APPLICATION"]["offers_base_url"] + config["USER"]["location_url"]
+OFFERS_URLS = config["APPLICATION"]["offers_base_url"].split(",")
+OFFERS_URLS = [url  + config["USER"]["location_url"] for url in OFFERS_URLS]
 
 DEFAULT_EMOJI = config["APPLICATION"]["default_emoji"].split(",")
 EMOJI = config["USER"]["emoji"].split(",") if "emoji" in config["USER"] else []
@@ -43,16 +44,38 @@ def get_time_utc(hour: int, minute: int) -> datetime.time:
 
 
 def get_offers():
-    html_doc = requests.get(OFFERS_URL).content
-    soup = BeautifulSoup(html_doc, 'html.parser')
-    meal_locations = soup.find_all(lambda tag: tag.name == "div" and tag.get("class") == ["offerLayout"])
+    meal_locations = []
+    for url in OFFERS_URLS:
+        html_doc = requests.get(url).content
+        soup = BeautifulSoup(html_doc, 'html.parser')
+        url_meal_locations = soup.find_all(lambda tag: tag.name == "div" and tag.get("class") == ["offerLayout"])
+        if len(url_meal_locations) == 0:
+            url_meal_locations = soup.find_all(lambda tag: tag.name == "div" and tag.get("class") == ["diner-list"])
+        if len(url_meal_locations) == 0:
+            raise ValueError(f"Could not find any meal offers at {url}")
+        meal_locations.extend(url_meal_locations)
+        print(f"Found {len(url_meal_locations)} offers at {url}")
+
     location_offers = {}
 
     for location in meal_locations:
-        name = location.find('h3').text.strip()
-        offers = [i.text.strip() for i in
-                  location.find_all(lambda tag: tag.name == "div" and tag.get("class") == ["offer"])]
-        location_offers[name] = offers
+        name = location.find('h3')
+        if name is None:
+            name = location.find('h2')
+        name = name.text.strip()
+        if name not in location_offers:
+            offers = [i.text.strip() for i in
+                    location.find_all(lambda tag: tag.name == "div" and tag.get("class") == ["offer"])]
+            if len(offers) == 0:
+                offers = []
+                for i in location.find_all("div",  {"class": ["row", "full-view"]}):
+                    offer = ""
+                    if i.find("div", {"class": "food"}):
+                        offer = i.find("div", {"class": "food"}).text.strip()
+                    if i.find("div", {"class": "price"}):
+                        offer = offer + " " + i.find("div", {"class": "price"}).text.strip()
+                    offers.append(offer)
+            location_offers[name] = offers
 
     return location_offers
 
